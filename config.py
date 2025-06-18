@@ -3,12 +3,12 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-API_ID = int(os.getenv("API_ID", "29970536"))
-API_HASH = os.getenv("API_HASH", "f4bfdcdd4a5c1b7328a7e4f25f024a09")
+API_ID = int(os.getenv("API_ID", "28762030"))
+API_HASH = os.getenv("API_HASH", "918e2aa94075a7d04717b371a21fb689")
 BOT_TOKEN = os.getenv("BOT_TOKEN", "")
 MONGO_DB_URI = os.getenv("MONGO_DB_URI", "")
 
-OWNER_ID = int(os.getenv("OWNER_ID", "7315805581"))
+OWNER_ID = int(os.getenv("OWNER_ID", "8019381468"))
 
 DURATION_LIMIT = int(os.getenv("DURATION_LIMIT", "180"))
 COMMAND_PREFIXES = list(os.getenv("COMMAND_PREFIXES", "/ ! .").split())
