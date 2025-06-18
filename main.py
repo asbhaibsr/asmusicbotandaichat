@@ -8,6 +8,10 @@ from config import API_ID, API_HASH, BOT_TOKEN, MONGO_URI
 from helpers.clean import auto_clean
 from pyrogram import idle
 
+# 👇 Keep-alive for Koyeb Health Check
+from keep_alive import keep_alive
+keep_alive()
+
 # Pyrogram Bot Client
 app = Client("MusicBot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
 pytgcalls = PyTgCalls(app)
