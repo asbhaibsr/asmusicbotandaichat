@@ -1,7 +1,7 @@
 import os
 from pyrogram import Client, filters
 from pytgcalls import PyTgCalls
-from pytgcalls.types.input_stream import InputStream, AudioPiped
+from pytgcalls.types.input_stream.quality import AudioPiped  # ✅ Fixed import
 from pyrogram.types import Message
 from pymongo import MongoClient
 import asyncio
