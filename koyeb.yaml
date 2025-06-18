@@ -1,0 +1,8 @@
+name: asmusicbot
+build:
+  dockerfile: Dockerfile
+run:
+  cmd: python3 bot.py
+  env:
+    - name: PYTHONUNBUFFERED
+      value: "1"
