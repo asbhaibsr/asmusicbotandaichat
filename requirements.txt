@@ -1,6 +1,7 @@
 pyrogram==2.0.106
-tgcrypto
-pytgcalls==0.0.17
+tgcrypto==1.2.5
+pytgcalls==1.2.3
 yt-dlp
 pymongo
-httpx
+flask
+aiohttp
