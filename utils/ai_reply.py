@@ -4,16 +4,16 @@ import httpx
 async def get_ai_reply(message: str) -> str:
     try:
         async with httpx.AsyncClient(timeout=20) as client:
-            url = "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium"
-            headers = {"Authorization": "Bearer YOUR_HUGGINGFACE_API_KEY"}
-            payload = {"inputs": message}
-            response = await client.post(url, json=payload, headers=headers)
-            result = response.json()
-            return result.get("generated_text", "Kya kehna chahti ho tum? 😅")
+            response = await client.post(
+                "https://yqcloud.ziyexin.xyz/api/gpt",
+                json={"messages": [{"role": "user", "content": message}]}
+            )
+            data = response.json()
+            return data.get("result", "Hmm... kuch samajh nahi aaya 😅")
     except Exception as e:
         fallback = [
-            "Hmm... interesting! 😊",
-            "Zyada socho mat, bas enjoy karo. 😄",
-            "Main hoon na! 💕",
+            "Kya baat karni hai jaan? 💬",
+            "Main hoon na, bolo ❤️",
+            "Kuch interesting batao na 😍",
         ]
         return random.choice(fallback)
