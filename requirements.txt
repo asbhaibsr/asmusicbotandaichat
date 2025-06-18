@@ -1,5 +1,5 @@
 pyrogram==2.0.106
 tgcrypto==1.2.5
-git+https://github.com/pytgcalls/pytgcalls@v0.7.1
+py-tgcalls==1.2.5  # Or the latest working version
 requests
 g4f
