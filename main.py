@@ -2,7 +2,7 @@ import os
 import asyncio
 from pyrogram import Client, filters
 from pytgcalls import PyTgCalls
-from pytgcalls.types.input_stream import InputAudioStream
+from pytgcalls.types.input_stream.input import InputAudioStream
 from pyrogram.types import Message
 from pymongo import MongoClient
 from helpers.ai import get_ai_reply
