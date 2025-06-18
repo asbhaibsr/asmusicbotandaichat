@@ -20,4 +20,11 @@ async def toggle_ai(client, message: Message):
         await message.reply("❌ Unknown command. Use `/ai on` or `/ai off`")
 
 # Handle private AI chat messages
-@Client.
+@Client.on_message(filters.private & filters.text & ~filters.command(["start", "ai"]))
+async def private_chat(client, message: Message):
+    if message.chat.id not in AI_USERS:
+        return await message.reply("🧠 AI chat is currently off. Use `/ai on` to enable.")
+    
+    user_msg = message.text
+    reply_text = await get_ai_reply(user_msg)
+    await message.reply_text(reply_text)
