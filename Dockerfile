@@ -1,17 +1,19 @@
-FROM python:3.10
+# Base image with Python 3.10
+FROM python:3.10-slim
 
-# Install git, ffmpeg, gcc for audio & dependency builds
-RUN apt update && apt install -y git ffmpeg gcc
-
-# Set working directory inside container
+# Set working directory
 WORKDIR /app
 
-# Copy all project files
+# Install system dependencies
+RUN apt-get update && \
+    apt-get install -y ffmpeg git gcc libffi-dev libssl-dev python3-dev build-essential && \
+    apt-get clean
+
+# Copy all files to container
 COPY . .
 
-# Install Python dependencies
-RUN pip install --upgrade pip && \
-    pip install -r requirements.txt
+# Upgrade pip and install Python dependencies
+RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# Start your bot
-CMD ["python3", "main.py"]
+# Run the bot
+CMD ["python3", "bot.py"]
