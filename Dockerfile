@@ -4,10 +4,13 @@ FROM python:3.10-slim
 # Set working directory
 WORKDIR /app
 
-# Install system dependencies
+# Install system dependencies + tzdata for Telegram time sync
 RUN apt-get update && \
-    apt-get install -y ffmpeg git gcc libffi-dev libssl-dev python3-dev build-essential && \
+    apt-get install -y ffmpeg git gcc libffi-dev libssl-dev python3-dev build-essential tzdata && \
     apt-get clean
+
+# Set Timezone to Asia/Kolkata to fix Telegram BadMsgNotification error
+ENV TZ=Asia/Kolkata
 
 # Copy all files to container
 COPY . .
