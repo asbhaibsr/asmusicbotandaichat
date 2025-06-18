@@ -1,6 +1,6 @@
 pyrogram==2.0.106
 tgcrypto==1.2.5
-pytgcalls==1.2.3
+git+https://github.com/pytgcalls/pytgcalls
 yt-dlp
 pymongo
 flask
