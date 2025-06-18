@@ -1,22 +1,37 @@
-# helpers/ytdl.py
+import yt_dlp
+import os
 
-from yt_dlp import YoutubeDL
-
-YDL_OPTS = {
-    "format": "bestaudio/best",
-    "quiet": True,
-    "geo_bypass": True,
-    "nocheckcertificate": True,
-    "ignoreerrors": True,
-    "logtostderr": False,
-    "source_address": "0.0.0.0"
+YDL_OPTIONS = {
+    'format': 'bestaudio',
+    'noplaylist': True,
+    'quiet': True,
+    'extract_flat': False,
+    'outtmpl': 'downloads/%(title)s.%(ext)s',
+    'postprocessors': [{
+        'key': 'FFmpegExtractAudio',
+        'preferredcodec': 'mp3',
+        'preferredquality': '192',
+    }],
 }
 
-def extract_info(url):
+
+async def download_audio(query: str):
     try:
-        with YoutubeDL(YDL_OPTS) as ytdl:
-            info = ytdl.extract_info(url, download=False)
-            return info
+        with yt_dlp.YoutubeDL(YDL_OPTIONS) as ydl:
+            info = ydl.extract_info(f"ytsearch:{query}", download=False)['entries'][0]
+            title = info.get("title", None)
+            duration = info.get("duration", None)
+
+            # Ab download kare
+            ydl.download([info['webpage_url']])
+            filename = ydl.prepare_filename(info).replace(".webm", ".mp3").replace(".m4a", ".mp3")
+
+        return {
+            "title": title,
+            "duration": duration,
+            "filepath": filename
+        }
+
     except Exception as e:
-        print(f"YT-DLP Error: {e}")
+        print(f"[ERROR] in ytdl.py: {e}")
         return None
