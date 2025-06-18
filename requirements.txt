@@ -1,5 +1,5 @@
 pyrogram==2.0.106
 tgcrypto==1.2.5
-py-tgcalls[pyrogram]
+py-tgcalls==1.6.0
 requests
 g4f
