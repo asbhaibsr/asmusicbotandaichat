@@ -3,3 +3,4 @@ tgcrypto
 pytgcalls==0.0.17
 yt-dlp
 pymongo
+httpx
