@@ -1,8 +1,6 @@
 from pyrogram import filters
+from config import SUDO_USERS
 
-# Command filter shortcut
-command = filters.command
-
-# Custom sudo filter for specific users
-def sudo_filter(user_ids):
-    return filters.user(user_ids)
+# Filter to allow only sudo users
+def sudo_filter():
+    return filters.user(SUDO_USERS)
