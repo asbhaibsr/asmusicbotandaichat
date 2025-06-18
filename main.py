@@ -6,7 +6,7 @@ from pytgcalls import PyTgCalls
 from motor.motor_asyncio import AsyncIOMotorClient
 from config import API_ID, API_HASH, BOT_TOKEN, MONGO_URI
 from helpers.clean import auto_clean
-from pyrogram.idle import idle
+from pyrogram import idle
 
 # Pyrogram Bot Client
 app = Client("MusicBot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
