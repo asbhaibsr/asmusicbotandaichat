@@ -4,19 +4,19 @@ FROM python:3.10-slim
 # Set working directory
 WORKDIR /app
 
-# Install system dependencies + tzdata for Telegram time sync
+# Install system dependencies + tzdata for time sync fix
 RUN apt-get update && \
     apt-get install -y ffmpeg git gcc libffi-dev libssl-dev python3-dev build-essential tzdata && \
     apt-get clean
 
-# Set Timezone to Asia/Kolkata to fix Telegram BadMsgNotification error
+# Set timezone to match Telegram server
 ENV TZ=Asia/Kolkata
 
-# Copy all files to container
+# Copy project files
 COPY . .
 
-# Upgrade pip and install Python dependencies
+# Install dependencies
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# Run the bot
-CMD ["python3", "bot.py"]
+# Start the bot
+CMD ["python3", "main.py"]
