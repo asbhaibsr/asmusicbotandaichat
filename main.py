@@ -2,7 +2,7 @@ import os
 import asyncio
 from pyrogram import Client, filters
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
-from pytgcalls import PyTgCallsClient
+from pytgcalls import PyTgCalls
 from motor.motor_asyncio import AsyncIOMotorClient
 from config import API_ID, API_HASH, BOT_TOKEN, MONGO_URI
 from pyrogram import idle
@@ -18,7 +18,7 @@ from commands.stop import stop_handler
 
 # Bot client
 app = Client("MusicBot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
-pytgcalls = PyTgCallsClient(app)
+pytgcalls = PyTgCalls(app)
 
 # MongoDB setup
 db = AsyncIOMotorClient(MONGO_URI).botdb
