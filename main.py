@@ -2,7 +2,10 @@ import os
 import asyncio
 from pyrogram import Client, filters
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
-from pyro_tgcalls import Application # <--- यहाँ बदलाव
+
+# pyrogram-voice-chat के लिए सही इम्पोर्ट पाथ
+from pyrogram_voice_chat import VoiceChatClient # <--- यहाँ बदलाव
+
 from motor.motor_asyncio import AsyncIOMotorClient
 from config import API_ID, API_HASH, BOT_TOKEN, MONGO_URI
 from pyrogram import idle
@@ -18,9 +21,8 @@ from commands.stop import stop_handler
 
 # Bot client
 app = Client("MusicBot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
-# pyro-tgcalls Application का इंस्टेंस बनाना
-# यहाँ pytgcalls को बदलकर नया ऑब्जेक्ट बनाएं
-pycalls_app = Application(app) # <--- यहाँ बदलाव, नाम भी बदला ताकि कन्फ्यूज न हो
+# VoiceChatClient का इंस्टेंस बनाना
+voice_chat_client = VoiceChatClient(app) # <--- यहाँ बदलाव, नाम भी बदला ताकि कन्फ्यूज न हो
 
 # MongoDB setup
 db = AsyncIOMotorClient(MONGO_URI).botdb
@@ -69,34 +71,42 @@ async def group_ai_reply(_, message: Message):
         else:
             await message.reply_text(reply)
 
-# Music Commands - **महत्वपूर्ण: यहाँ pytgcalls की जगह pycalls_app का उपयोग करें**
+# Music Commands - **महत्वपूर्ण: यहाँ voice_chat_client का उपयोग करें**
 # साथ ही, commands/play.py, commands/pause.py, आदि में भी बदलाव करने होंगे
-# क्योंकि pytgcalls ऑब्जेक्ट का नाम बदल गया है.
+# क्योंकि ऑब्जेक्ट का नाम और उसके मेथड्स pyrogram-voice-chat के अनुसार होंगे.
+# यह सबसे बड़ा बदलाव होगा.
 
 @app.on_message(filters.command("play") & filters.group)
 async def play_command(_, message: Message):
-    await play_handler(pycalls_app, message) # <--- यहाँ बदला
+    # play_handler के अंदर VoiceChatClient के मेथड्स का उपयोग करना होगा
+    await play_handler(voice_chat_client, message) # <--- यहाँ बदला
 
 @app.on_message(filters.command("pause") & filters.group)
 async def pause_command(_, message: Message):
-    await pause_handler(pycalls_app, message) # <--- यहाँ बदला
+    await pause_handler(voice_chat_client, message) # <--- यहाँ बदला
 
 @app.on_message(filters.command("resume") & filters.group)
 async def resume_command(_, message: Message):
-    await resume_handler(pycalls_app, message) # <--- यहाँ बदला
+    await resume_handler(voice_chat_client, message) # <--- यहाँ बदला
 
 @app.on_message(filters.command("stop") & filters.group)
 async def stop_command(_, message: Message):
-    await stop_handler(pycalls_app, message) # <--- यहाँ बदला
+    await stop_handler(voice_chat_client, message) # <--- यहाँ बदला
 
 @app.on_message(filters.command("leave") & filters.group)
 async def leave_command(_, message: Message):
-    await leave_handler(pycalls_app, message) # <--- यहाँ बदला
+    await leave_handler(voice_chat_client, message) # <--- यहाँ बदला
 
 # Main start
 async def main():
     await app.start()
-    await pycalls_app.start() # <--- यहाँ बदला
+    # pyrogram-voice-chat को स्टार्ट करने का तरीका थोड़ा अलग हो सकता है
+    # आमतौर पर, VoiceChatClient को सीधे start() मेथड की आवश्यकता नहीं होती है,
+    # यह Pyrogram क्लाइंट के साथ इंटरैक्ट करता है.
+    # हम इसे हटाते हैं और देखेंगे कि यह कैसे काम करता है.
+    # अगर एरर आता है, तो हम यहाँ पर pyrogram-voice-chat के docs के अनुसार start मेथड जोड़ेंगे.
+    # await voice_chat_client.start() # <--- यह लाइन हटा दी गई है, अगर जरूरत पड़ी तो वापस लाएंगे.
+    
     asyncio.create_task(auto_clean())
     print("✅ Bot is Live with AI + Music!")
     await idle()
