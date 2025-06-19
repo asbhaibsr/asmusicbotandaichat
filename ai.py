@@ -1,87 +1,62 @@
 import random
-import httpx
 
-fallback_replies = [
-    "Hmm, interesting... 💭",
-    "Kya aap thoda aur explain karenge? 😅",
-    "Main samajhne ki koshish kar rahi hoon... 🤖❤️",
-    "Wah! Aap bahut smart ho 😍",
-]
+# Try all free AI modules in order of reliability
+try:
+    from g4f.client import Client as G4FClient
+except:
+    G4FClient = None
 
-async def generate_ai_reply(message):
-    try:
-        # Backend 1: HuggingFace (replace with real API if you have)
-        response = await huggingface_ai(message)
-        if response:
-            return response
+try:
+    import phind
+except:
+    phind = None
 
-        # Backend 2: Phind
-        response = await phind_ai(message)
-        if response:
-            return response
+try:
+    from yqcloud import ChatBot as YQCloudBot
+except:
+    YQCloudBot = None
 
-        # Backend 3: YQCloud
-        response = await yqcloud_ai(message)
-        if response:
-            return response
+try:
+    from gemini import ChatBot as GeminiBot
+except:
+    GeminiBot = None
 
-        # Backend 4: Gemini
-        response = await gemini_ai(message)
-        if response:
-            return response
-
-    except Exception as e:
-        print("AI Error:", e)
-
-    return random.choice(fallback_replies)
-
-
-async def huggingface_ai(prompt):
-    try:
-        headers = {"Authorization": "Bearer YOUR_HUGGINGFACE_API_KEY"}
-        payload = {"inputs": prompt}
-        async with httpx.AsyncClient() as client:
-            r = await client.post(
-                "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium",
-                headers=headers,
-                json=payload,
-                timeout=15
+async def generate_ai_reply(user_message: str) -> str:
+    # 1. Try G4F
+    if G4FClient:
+        try:
+            client = G4FClient()
+            response = client.chat.completions.create(
+                model="gpt-3.5-turbo",
+                messages=[{"role": "user", "content": user_message}]
             )
-        if r.status_code == 200:
-            return r.json()[0]["generated_text"]
-    except:
-        pass
-    return None
+            return response.choices[0].message.content.strip()
+        except Exception:
+            pass
 
+    # 2. Try Phind
+    if phind:
+        try:
+            return phind.chat(user_message)
+        except Exception:
+            pass
 
-async def phind_ai(prompt):
-    try:
-        async with httpx.AsyncClient() as client:
-            r = await client.post("https://phind-v2.vercel.app/api/chat", json={"message": prompt})
-        if r.status_code == 200:
-            return r.json().get("response")
-    except:
-        pass
-    return None
+    # 3. Try YQCloud
+    if YQCloudBot:
+        try:
+            bot = YQCloudBot(api_key="free")
+            return await bot.chat(user_message)
+        except Exception:
+            pass
 
+    # 4. Try Gemini
+    if GeminiBot:
+        try:
+            bot = GeminiBot()
+            return await bot.chat(user_message)
+        except Exception:
+            pass
 
-async def yqcloud_ai(prompt):
-    try:
-        async with httpx.AsyncClient() as client:
-            r = await client.get(f"https://api.yqcloud.top/v1/chat/completions?text={prompt}")
-        if r.status_code == 200:
-            return r.json().get("data")
-    except:
-        pass
-    return None
+    # Fallback message
+    return "😔 Maaf karo, abhi main reply nahi de pa rahi hoon. Thodi der baad try karo!"
 
-
-async def gemini_ai(prompt):
-    try:
-        async with httpx.AsyncClient() as client:
-            r = await client.post("https://gemini-ai-api.vercel.app/api", json={"text": prompt})
-        if r.status_code == 200:
-            return r.json().get("response")
-    except:
-        pass
-    return None
