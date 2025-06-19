@@ -63,8 +63,7 @@ async def main():
     await pytgcalls.start()
     asyncio.create_task(auto_clean())  # Start auto clean
     print("🤖 Bot is running with AI + Music!")
-    await idle()
-    await app.stop()
+    await idle()  # Do NOT call app.stop()
 
 if __name__ == "__main__":
     asyncio.run(main())
