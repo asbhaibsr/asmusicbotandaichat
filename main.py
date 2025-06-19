@@ -1,16 +1,16 @@
 import os
 import asyncio
-from pyrogram import Client, filters
+from threading import Thread
+from pyrogram import Client, filters, idle
 from pyrogram.types import Message
 from pytgcalls import PyTgCalls
 from motor.motor_asyncio import AsyncIOMotorClient
 from config import API_ID, API_HASH, BOT_TOKEN, MONGO_URI
 from helpers.clean import auto_clean
-from pyrogram import idle
-
-# 👇 Keep-alive for Koyeb Health Check
 from keep_alive import keep_alive
-keep_alive()
+
+# Start keep_alive server in background
+Thread(target=keep_alive).start()
 
 # Pyrogram Bot Client
 app = Client("MusicBot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
@@ -49,21 +49,22 @@ async def ai_reply(_, message: Message):
     if data and data.get("ai") is True:
         if message.text.startswith("/"):
             return
-        reply = f"💬 (AI): Tumne kaha: {message.text}"  # <-- Replace with real AI
+        reply = f"💬 (AI): Tumne kaha: {message.text}"  # Replace with real AI
         await message.reply_text(reply)
 
-# /play command (add logic later)
+# /play command (placeholder)
 @app.on_message(filters.command("play") & filters.group)
 async def play_music(_, message: Message):
     await message.reply_text("🎧 Playing music feature will be handled here soon!")
 
-# Main Start Function
-async def main():
+# Start bot
+async def run():
     await app.start()
     await pytgcalls.start()
-    asyncio.create_task(auto_clean())  # Start auto clean
+    asyncio.create_task(auto_clean())
     print("🤖 Bot is running with AI + Music!")
-    await idle()  # Do NOT call app.stop()
+    await idle()
+    await app.stop()
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    asyncio.run(run())
