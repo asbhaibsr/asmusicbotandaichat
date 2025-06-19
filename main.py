@@ -2,7 +2,7 @@ import os
 import asyncio
 from pyrogram import Client, filters
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
-from py_tgcalls import Client as PyTgCallsClient # <--- यहाँ बदलाव
+from pyro_tgcalls import Application # <--- यहाँ बदलाव
 from motor.motor_asyncio import AsyncIOMotorClient
 from config import API_ID, API_HASH, BOT_TOKEN, MONGO_URI
 from pyrogram import idle
@@ -18,8 +18,9 @@ from commands.stop import stop_handler
 
 # Bot client
 app = Client("MusicBot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
-# PyTgCallsClient का इंस्टेंस बनाना
-pytgcalls = PyTgCallsClient(app)
+# pyro-tgcalls Application का इंस्टेंस बनाना
+# यहाँ pytgcalls को बदलकर नया ऑब्जेक्ट बनाएं
+pycalls_app = Application(app) # <--- यहाँ बदलाव, नाम भी बदला ताकि कन्फ्यूज न हो
 
 # MongoDB setup
 db = AsyncIOMotorClient(MONGO_URI).botdb
@@ -68,33 +69,34 @@ async def group_ai_reply(_, message: Message):
         else:
             await message.reply_text(reply)
 
-# Music Commands - **महत्वपूर्ण: अगर यह डिप्लॉय हो जाता है, तो हमें इन कमांड्स के काम न करने की समस्या को देखना होगा**
-# `py-tgcalls==2.0.5` के साथ, play_handler, pause_handler, आदि के लिए pytgcalls ऑब्जेक्ट का उपयोग कैसे किया जाता है, उसमें बदलाव हो सकता है.
+# Music Commands - **महत्वपूर्ण: यहाँ pytgcalls की जगह pycalls_app का उपयोग करें**
+# साथ ही, commands/play.py, commands/pause.py, आदि में भी बदलाव करने होंगे
+# क्योंकि pytgcalls ऑब्जेक्ट का नाम बदल गया है.
 
 @app.on_message(filters.command("play") & filters.group)
 async def play_command(_, message: Message):
-    await play_handler(pytgcalls, message)
+    await play_handler(pycalls_app, message) # <--- यहाँ बदला
 
 @app.on_message(filters.command("pause") & filters.group)
 async def pause_command(_, message: Message):
-    await pause_handler(pytgcalls, message)
+    await pause_handler(pycalls_app, message) # <--- यहाँ बदला
 
 @app.on_message(filters.command("resume") & filters.group)
 async def resume_command(_, message: Message):
-    await resume_handler(pytgcalls, message)
+    await resume_handler(pycalls_app, message) # <--- यहाँ बदला
 
 @app.on_message(filters.command("stop") & filters.group)
 async def stop_command(_, message: Message):
-    await stop_handler(pytgcalls, message)
+    await stop_handler(pycalls_app, message) # <--- यहाँ बदला
 
 @app.on_message(filters.command("leave") & filters.group)
 async def leave_command(_, message: Message):
-    await leave_handler(pytgcalls, message)
+    await leave_handler(pycalls_app, message) # <--- यहाँ बदला
 
 # Main start
 async def main():
     await app.start()
-    await pytgcalls.start() 
+    await pycalls_app.start() # <--- यहाँ बदला
     asyncio.create_task(auto_clean())
     print("✅ Bot is Live with AI + Music!")
     await idle()
