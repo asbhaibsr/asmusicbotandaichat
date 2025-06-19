@@ -19,8 +19,10 @@ RUN apt-get update && \
 
 COPY requirements.txt .
 
-# इस लाइन को मानक pip install पर वापस करें
-RUN pip install --upgrade pip && pip install -r requirements.txt 
+RUN pip install --upgrade pip && pip install -r requirements.txt
+
+# pyrogram-voice-chat को सीधे GitHub से इंस्टॉल करें
+RUN pip install git+https://github.com/pyrogram/pyrogram-voice-chat.git # <--- यहाँ नया बदलाव
 
 COPY . .
 
