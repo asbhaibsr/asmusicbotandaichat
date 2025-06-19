@@ -20,9 +20,8 @@ requests
 speedtest-cli
 spotipy
 tgcrypto
-git+https://github.com/yt-dlp/yt-dlp.git
-
-# FREE AI BACKENDS
 g4f
 yqcloud
 phind
+gemini
+git+https://github.com/yt-dlp/yt-dlp.git
