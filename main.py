@@ -59,7 +59,13 @@ async def group_ai_reply(_, message: Message):
         if message.text.startswith("/"):
             return
         reply = await generate_ai_reply(message.text)
-        await message.reply_text(reply)
+
+        # Fallback message check
+        if isinstance(reply, tuple):
+            text, markup = reply
+            await message.reply_text(text, reply_markup=markup)
+        else:
+            await message.reply_text(reply)
 
 # Music Commands
 @app.on_message(filters.command("play") & filters.group)
