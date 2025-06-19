@@ -1,9 +1,8 @@
 pyrogram==2.0.106
-tgcrypto
-pymongo
-motor
-aiohttp
-spotipy
-speedtest-cli
+tgcrypto==1.2.5
+pytgcalls==3.0.0.dev24
 g4f==0.5.5.5
+yt-dlp==2024.05.27
 httpx==0.27.0
+pymongo==4.7.2
+aiofiles==23.2.1
