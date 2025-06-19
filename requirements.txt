@@ -21,7 +21,7 @@ speedtest-cli
 spotipy
 tgcrypto
 git+https://github.com/yt-dlp/yt-dlp.git
-g4f==0.2.6.8
+g4f==0.5.5.5
 yqcloud==0.2.0
 phind==0.1.5
 google-generativeai==0.4.1
