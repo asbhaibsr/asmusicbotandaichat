@@ -3,8 +3,8 @@ import asyncio
 from pyrogram import Client, filters
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 
-# PyTgCalls के लिए सही इम्पोर्ट पाथ (pytgcalls==4.0.0 के लिए)
-from pytgcalls import Client as PyTgCallsClient # <--- यहाँ बदलाव किया गया है
+# PyTgCalls के लिए सही इम्पोर्ट पाथ (pytgcalls==3.0.0.dev24 के लिए संभावित)
+from pytgcalls.client import PyTgCallsClient # <--- यहाँ बदलाव किया गया है
 
 from motor.motor_asyncio import AsyncIOMotorClient
 from config import API_ID, API_HASH, BOT_TOKEN, MONGO_URI
@@ -22,7 +22,7 @@ from commands.stop import stop_handler
 # Bot client
 app = Client("MusicBot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
 # PyTgCallsClient का सही इंस्टेंस बनाना
-pytgcalls = PyTgCallsClient(app) # <--- यहाँ बदलाव किया गया है (अगर PyTgCallsClient सीधे PyTgCalls से आता है तो)
+pytgcalls = PyTgCallsClient(app) # <--- यह लाइन सही है
 
 # MongoDB setup
 db = AsyncIOMotorClient(MONGO_URI).botdb
