@@ -2,10 +2,7 @@ import os
 import asyncio
 from pyrogram import Client, filters
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
-
-# Py-TgCalls-Group के लिए सही इम्पोर्ट पाथ
-from py_tgcalls_group import PyTgCalls # <--- यहाँ बदलाव
-
+from py_tgcalls import Client as PyTgCallsClient # <--- यहाँ बदलाव
 from motor.motor_asyncio import AsyncIOMotorClient
 from config import API_ID, API_HASH, BOT_TOKEN, MONGO_URI
 from pyrogram import idle
@@ -21,8 +18,8 @@ from commands.stop import stop_handler
 
 # Bot client
 app = Client("MusicBot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
-# PyTgCalls का इंस्टेंस बनाना
-pytgcalls = PyTgCalls(app) # <--- यहाँ बदला है (PyTgCallsClient की जगह PyTgCalls)
+# PyTgCallsClient का इंस्टेंस बनाना
+pytgcalls = PyTgCallsClient(app)
 
 # MongoDB setup
 db = AsyncIOMotorClient(MONGO_URI).botdb
@@ -71,10 +68,8 @@ async def group_ai_reply(_, message: Message):
         else:
             await message.reply_text(reply)
 
-# Music Commands - **महत्वपूर्ण: इन हैंडलर्स को PyTgCalls (py-tgcalls-group से) के लिए एडजस्टमेंट की आवश्यकता हो सकती है**
-# PyTgCalls में थोड़े अलग मेथड हो सकते हैं या अलग आर्गुमेंट की अपेक्षा हो सकती है.
-# अभी के लिए, मान लें कि वे एक बुनियादी शुरुआत के लिए पर्याप्त संगत हैं.
-# यदि सफल डिप्लॉयमेंट के बाद प्ले/पॉज़/आदि कमांड विफल हो जाते हैं, तो यह अगली जगह होगी जहाँ देखना होगा.
+# Music Commands - **महत्वपूर्ण: अगर यह डिप्लॉय हो जाता है, तो हमें इन कमांड्स के काम न करने की समस्या को देखना होगा**
+# `py-tgcalls==2.0.5` के साथ, play_handler, pause_handler, आदि के लिए pytgcalls ऑब्जेक्ट का उपयोग कैसे किया जाता है, उसमें बदलाव हो सकता है.
 
 @app.on_message(filters.command("play") & filters.group)
 async def play_command(_, message: Message):
@@ -99,7 +94,7 @@ async def leave_command(_, message: Message):
 # Main start
 async def main():
     await app.start()
-    await pytgcalls.start() # इसमें भी PyTgCalls के लिए एडजस्टमेंट की आवश्यकता हो सकती है
+    await pytgcalls.start() 
     asyncio.create_task(auto_clean())
     print("✅ Bot is Live with AI + Music!")
     await idle()
