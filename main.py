@@ -8,6 +8,7 @@ from config import API_ID, API_HASH, BOT_TOKEN, MONGO_URI
 from pyrogram import idle
 from helpers.clean import auto_clean
 from ai import generate_ai_reply
+from commands.play import play_handler  # ✅ Added
 
 # Pyrogram Bot Client
 app = Client("MusicBot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
@@ -55,10 +56,10 @@ async def group_ai_reply(_, message: Message):
         reply = await generate_ai_reply(message.text)
         await message.reply_text(reply)
 
-# Placeholder Music Command
+# Music handler (delegated to separate command file)
 @app.on_message(filters.command("play") & filters.group)
-async def play_music(_, message: Message):
-    await message.reply_text("🎶 Music streaming system is ready. Real play logic coming soon!")
+async def play_command(_, message: Message):
+    await play_handler(_, message, app, pytgcalls)  # Use handler from commands.play
 
 # Main
 async def main():
