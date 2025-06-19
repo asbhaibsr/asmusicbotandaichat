@@ -3,8 +3,8 @@ import asyncio
 from pyrogram import Client, filters
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 
-# Pyrogram Calls के लिए इम्पोर्ट बदला गया है
-from pyrogram_calls import PyrogramCalls # <--- यहाँ बदलाव
+# Py-TgCalls-Group के लिए सही इम्पोर्ट पाथ
+from py_tgcalls_group import PyTgCalls # <--- यहाँ बदलाव
 
 from motor.motor_asyncio import AsyncIOMotorClient
 from config import API_ID, API_HASH, BOT_TOKEN, MONGO_URI
@@ -21,8 +21,8 @@ from commands.stop import stop_handler
 
 # Bot client
 app = Client("MusicBot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
-# PyrogramCalls को इनिशियलाइज़ करें
-pytgcalls = PyrogramCalls(app) # <--- यहाँ बदलाव
+# PyTgCalls का इंस्टेंस बनाना
+pytgcalls = PyTgCalls(app) # <--- यहाँ बदला है (PyTgCallsClient की जगह PyTgCalls)
 
 # MongoDB setup
 db = AsyncIOMotorClient(MONGO_URI).botdb
@@ -71,8 +71,8 @@ async def group_ai_reply(_, message: Message):
         else:
             await message.reply_text(reply)
 
-# Music Commands - **महत्वपूर्ण: इन हैंडलर्स को PyrogramCalls के लिए एडजस्टमेंट की आवश्यकता हो सकती है**
-# PyrogramCalls में थोड़े अलग मेथड हो सकते हैं या अलग आर्गुमेंट की अपेक्षा हो सकती है.
+# Music Commands - **महत्वपूर्ण: इन हैंडलर्स को PyTgCalls (py-tgcalls-group से) के लिए एडजस्टमेंट की आवश्यकता हो सकती है**
+# PyTgCalls में थोड़े अलग मेथड हो सकते हैं या अलग आर्गुमेंट की अपेक्षा हो सकती है.
 # अभी के लिए, मान लें कि वे एक बुनियादी शुरुआत के लिए पर्याप्त संगत हैं.
 # यदि सफल डिप्लॉयमेंट के बाद प्ले/पॉज़/आदि कमांड विफल हो जाते हैं, तो यह अगली जगह होगी जहाँ देखना होगा.
 
@@ -99,7 +99,7 @@ async def leave_command(_, message: Message):
 # Main start
 async def main():
     await app.start()
-    await pytgcalls.start() # इसमें भी PyrogramCalls के लिए एडजस्टमेंट की आवश्यकता हो सकती है
+    await pytgcalls.start() # इसमें भी PyTgCalls के लिए एडजस्टमेंट की आवश्यकता हो सकती है
     asyncio.create_task(auto_clean())
     print("✅ Bot is Live with AI + Music!")
     await idle()
