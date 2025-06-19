@@ -15,17 +15,17 @@ py-tgcalls==2.0.5
 pykeyboard
 pyrogram==2.0.106
 python-dotenv
-PyYAML==6.0.1
+PyYAML>=6.0.1
 requests
 speedtest-cli
 spotipy
 tgcrypto
 
-# Free AI backends (no API key required)
-g4f
+# AI backends for free chat
+g4f[all]
 yqcloud
 phind
-gemini
+gemini-fullstack-langgraph-quickstart @ git+https://github.com/googleapis/python-genai.git
 
-# yt-dlp for YouTube download
+# yt-dlp for music download
 git+https://github.com/yt-dlp/yt-dlp.git
