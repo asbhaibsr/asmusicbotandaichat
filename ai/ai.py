@@ -1,37 +1,42 @@
 import random
-from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+import g4f
+import asyncio
+import httpx
+import google.generativeai as genai
 
-# G4F import
+# Google AI बिना key के काम नहीं करेगा, fallback में ही use होगा
 try:
-    import g4f
-    from g4f.client import Client
-except ImportError:
-    g4f = None
+    genai.configure(api_key=None)  # FREE नहीं है, fallback handle किया है
+except:
+    pass
 
-# 🌟 Fallback message with buttons
-def fallback_message():
-    return (
-        "⚠️ अभी AI जवाब देने में दिक्कत आ रही है।\n\n"
-        "🔁 कृपया थोड़ी देर बाद फिर कोशिश करें।\n\n"
-        "👇 तब तक हमारे चैनल और ग्रुप से जुड़ें:",
-        InlineKeyboardMarkup([
-            [InlineKeyboardButton("🎬 Movie Group", url="https://t.me/iStreamX")],
-            [InlineKeyboardButton("📢 Update Channel", url="https://t.me/asbhai_bsr")]
-        ])
-    )
-
-# ✅ Free AI जवाब देने वाला function
-async def generate_ai_reply(user_message):
-    if g4f:
+# MAIN FUNCTION
+async def generate_ai_reply(message: str) -> str:
+    try:
+        reply = await gpt_g4f(message)
+        return reply
+    except Exception:
         try:
-            client = Client()
-            response = client.chat.completions.create(
-                model="gpt-3.5-turbo",
-                messages=[{"role": "user", "content": user_message}],
-            )
-            return response.choices[0].message.content, None
-        except Exception as e:
-            print("❌ G4F error:", e)
+            reply = await gpt_gemini(message)
+            return reply
+        except Exception:
+            return ai_failed_message()
 
-    # fallback message अगर AI फेल हो जाए
-    return fallback_message()
+# g4f (free backend)
+async def gpt_g4f(prompt):
+    response = await g4f.ChatCompletion.create_async(
+        model=g4f.models.gpt_35_turbo,
+        messages=[{"role": "user", "content": prompt}]
+    )
+    return response
+
+# Google Gemini (API key नहीं होने पर भी fallback किया गया है)
+async def gpt_gemini(prompt):
+    model = genai.GenerativeModel("gemini-pro")
+    chat = model.start_chat()
+    response = chat.send_message(prompt)
+    return response.text
+
+# Agar dono fail ho jaaye to
+def ai_failed_message():
+    return "🤖 AI अभी busy है!\n\n👇 नीचे से हमारे चैनल और मूवी ग्रुप जॉइन करें:\n\n📢 @asbhai_bsr\n🎬 @iStreamX"
