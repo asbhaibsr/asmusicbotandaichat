@@ -1,1 +1,1 @@
-from .chat import chat_with_ai
+from .ai import generate_ai_reply
