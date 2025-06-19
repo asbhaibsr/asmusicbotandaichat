@@ -1,25 +1,22 @@
-# Base image with Python 3.10
+# Base image
 FROM python:3.10-slim
 
 # Set working directory
 WORKDIR /app
 
-# Install system dependencies + tzdata(Optional) + build tools
+# Install system dependencies
 RUN apt-get update && \
-    apt-get install -y ffmpeg git gcc libffi-dev libssl-dev python3-dev build-essential tzdata && \
+    apt-get install -y ffmpeg git gcc libffi-dev libssl-dev python3-dev build-essential && \
     apt-get clean
 
-# Set timezone (optional, helps time-sync issues)
-ENV TZ=Asia/Kolkata
-
-# Copy all project files
+# Copy project files
 COPY . .
 
-# Upgrade pip and install Python dependencies
+# Install Python dependencies
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# Expose port 8080 for health check
+# Expose port for Koyeb health check
 EXPOSE 8080
 
-# Start the bot
+# Run the bot
 CMD ["python3", "main.py"]
