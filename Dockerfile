@@ -19,10 +19,8 @@ RUN apt-get update && \
 
 COPY requirements.txt .
 
-# यहाँ बदलाव है: py-tgcalls को अलग से, verbose मोड में इंस्टॉल करें
-RUN pip install --upgrade pip && \
-    pip install -r requirements.txt && \
-    pip install --no-cache-dir --verbose py-tgcalls==2.2.3 # <--- यहाँ बदला है
+# इस लाइन को मानक pip install पर वापस करें
+RUN pip install --upgrade pip && pip install -r requirements.txt 
 
 COPY . .
 
